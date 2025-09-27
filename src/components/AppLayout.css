@@ -1,0 +1,85 @@
+.app-layout {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.app-header {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 0 24px;
+}
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.app-title {
+  margin: 0 !important;
+  color: #1890ff;
+  font-weight: 600;
+}
+
+.header-subtitle {
+  color: #666;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.app-content {
+  max-width: 1200px;
+  margin: 24px auto;
+  padding: 0 24px;
+}
+
+.main-tabs {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.main-tabs .ant-tabs-nav {
+  margin: 0;
+  padding: 0 24px;
+  background: #fafafa;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.main-tabs .ant-tabs-content-holder {
+  padding: 24px;
+  min-height: 600px;
+}
+
+.main-tabs .ant-tabs-tab {
+  padding: 16px 24px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.main-tabs .ant-tabs-tab-active {
+  background: white;
+  border-radius: 8px 8px 0 0;
+}
+
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .app-content {
+    margin: 16px auto;
+    padding: 0 16px;
+  }
+  
+  .main-tabs .ant-tabs-content-holder {
+    padding: 16px;
+  }
+}

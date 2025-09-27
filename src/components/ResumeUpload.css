@@ -1,0 +1,115 @@
+.resume-upload {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.upload-card,
+.review-card,
+.complete-card {
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border: none;
+}
+
+.upload-content {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.upload-icon {
+  font-size: 48px;
+  color: #1890ff;
+  margin-bottom: 16px;
+}
+
+.upload-description {
+  display: block;
+  margin-bottom: 32px;
+  font-size: 16px;
+}
+
+.resume-dragger {
+  border: 2px dashed #d9d9d9;
+  border-radius: 8px;
+  background: #fafafa;
+  transition: all 0.3s ease;
+}
+
+.resume-dragger:hover {
+  border-color: #1890ff;
+  background: #f0f8ff;
+}
+
+.upload-loading {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.review-card {
+  padding: 24px;
+}
+
+.review-description {
+  display: block;
+  margin-bottom: 24px;
+  font-size: 16px;
+}
+
+.candidate-form {
+  margin-top: 24px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 32px;
+}
+
+.complete-content {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.success-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: #52c41a;
+  color: white;
+  font-size: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+}
+
+.start-interview-btn {
+  margin-top: 24px;
+  height: 48px;
+  padding: 0 32px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .resume-upload {
+    padding: 0 16px;
+  }
+  
+  .upload-content,
+  .complete-content {
+    padding: 24px 16px;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .form-actions .ant-btn {
+    width: 100%;
+  }
+}
