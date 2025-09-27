@@ -21,7 +21,35 @@ const InterviewTimer: React.FC = () => {
         dispatch(updateTimer(newTime));
         
         if (newTime <= 0) {
-          handleTimeUp();
+          dispatch(stopTimer());
+          
+          if (currentCandidate && currentSession) {
+            // Add system message about time up
+            dispatch(addChatMessage({
+              type: 'system',
+              content: 'Time\'s up! Moving to the next question...',
+            }));
+
+            // Move to next question
+            if (currentSession && currentSession.currentQuestionIndex < currentSession.questions.length - 1) {
+              dispatch(nextQuestion());
+              const nextQuestionIndex = currentSession.currentQuestionIndex + 1;
+              const nextQ = currentSession.questions[nextQuestionIndex];
+              
+              dispatch(addChatMessage({
+                type: 'ai',
+                content: `Question ${nextQuestionIndex + 1} of 6 (${nextQ.difficulty}): ${nextQ.text}`,
+                metadata: {
+                  questionId: nextQ.id,
+                  difficulty: nextQ.difficulty,
+                  timeRemaining: nextQ.timeLimit,
+                },
+              }));
+
+              // Start timer for next question
+              dispatch(updateTimer(nextQ.timeLimit));
+            }
+          }
         }
       }, 1000);
       
@@ -38,39 +66,8 @@ const InterviewTimer: React.FC = () => {
         clearInterval(intervalId);
       }
     };
-  }, [timer.isActive, timer.timeRemaining]);
+  }, [timer.isActive, timer.timeRemaining, dispatch, currentCandidate, currentSession]);
 
-  const handleTimeUp = () => {
-    dispatch(stopTimer());
-    
-    if (currentCandidate && currentSession) {
-      // Add system message about time up
-      dispatch(addChatMessage({
-        type: 'system',
-        content: 'Time\'s up! Moving to the next question...',
-      }));
-
-      // Move to next question
-      if (currentSession && currentSession.currentQuestionIndex < currentSession.questions.length - 1) {
-        dispatch(nextQuestion());
-        const nextQuestionIndex = currentSession.currentQuestionIndex + 1;
-        const nextQ = currentSession.questions[nextQuestionIndex];
-        
-        dispatch(addChatMessage({
-          type: 'ai',
-          content: `Question ${nextQuestionIndex + 1} of 6 (${nextQ.difficulty}): ${nextQ.text}`,
-          metadata: {
-            questionId: nextQ.id,
-            difficulty: nextQ.difficulty,
-            timeRemaining: nextQ.timeLimit,
-          },
-        }));
-
-        // Start timer for next question
-        dispatch(updateTimer(nextQ.timeLimit));
-      }
-    }
-  };
 
   const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
