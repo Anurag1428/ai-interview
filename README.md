@@ -1,46 +1,167 @@
-# Getting Started with Create React App
+# AI-Powered Interview Assistant
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A comprehensive React application that provides an AI-powered interview experience for full-stack developer positions. The app features two main interfaces: one for interviewees to take timed interviews and another for interviewers to review candidate performance.
 
-## Available Scripts
+## 🚀 Features
 
-In the project directory, you can run:
+### For Interviewees
+- **Resume Upload**: Upload PDF or DOCX resumes with automatic extraction of contact information
+- **Smart Data Collection**: AI chatbot collects missing information before starting the interview
+- **Timed Interview**: 6 questions with different difficulty levels and time limits
+  - 2 Easy questions (20 seconds each)
+  - 2 Medium questions (60 seconds each) 
+  - 2 Hard questions (120 seconds each)
+- **Real-time Chat Interface**: Interactive chat with AI interviewer
+- **Progress Tracking**: Visual progress indicators and timer
+- **Session Persistence**: Resume interviews after page refresh or browser close
 
-### `npm start`
+### For Interviewers
+- **Candidate Dashboard**: View all candidates with scores and status
+- **Detailed Analytics**: Individual candidate performance breakdown
+- **Search & Filter**: Find candidates by name, email, or status
+- **Score Rankings**: Candidates sorted by performance
+- **Complete Interview History**: View all questions, answers, and AI feedback
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Technical Features
+- **State Management**: Redux with Redux Persist for data persistence
+- **Modern UI**: Ant Design components with responsive design
+- **PDF/DOCX Parsing**: Automatic resume text extraction
+- **AI Integration**: Mock AI service for question generation and evaluation
+- **Local Storage**: All data persists locally using IndexedDB
+- **Welcome Back Modal**: Seamless session restoration
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## 🛠️ Tech Stack
 
-### `npm test`
+- **Frontend**: React 19, TypeScript
+- **State Management**: Redux Toolkit, Redux Persist
+- **UI Library**: Ant Design
+- **File Processing**: PDF.js, Mammoth.js
+- **Styling**: CSS3 with modern design patterns
+- **Build Tool**: Create React App
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 📦 Installation
 
-### `npm run build`
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd ai-interview-assistant
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+2. Install dependencies:
+```bash
+npm install
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+3. Start the development server:
+```bash
+npm start
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+4. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-### `npm run eject`
+## 🎯 Usage
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### For Candidates
+1. Navigate to the **Interviewee** tab
+2. Upload your resume (PDF or DOCX format)
+3. Review and complete any missing contact information
+4. Start the interview and answer 6 questions
+5. Each question has a time limit - answer before time runs out
+6. View your final score and feedback
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### For Interviewers
+1. Navigate to the **Interviewer Dashboard** tab
+2. View the list of all candidates
+3. Use search and filters to find specific candidates
+4. Click "View Details" to see complete interview history
+5. Review individual question scores and AI feedback
+6. Access candidate summaries and overall performance
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## 🏗️ Project Structure
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+```
+src/
+├── components/           # React components
+│   ├── AppLayout.tsx    # Main app layout with tabs
+│   ├── IntervieweeTab.tsx # Interview interface
+│   ├── InterviewerTab.tsx # Dashboard interface
+│   ├── ResumeUpload.tsx # Resume upload component
+│   ├── ChatInterface.tsx # Chat UI for interviews
+│   ├── InterviewTimer.tsx # Timer component
+│   ├── WelcomeBackModal.tsx # Session restoration modal
+│   └── CandidateDetailModal.tsx # Candidate details view
+├── store/               # Redux store configuration
+│   ├── index.ts        # Store setup with persistence
+│   └── slices/         # Redux slices
+│       ├── candidateSlice.ts # Candidate state management
+│       ├── interviewSlice.ts # Interview state management
+│       └── uiSlice.ts  # UI state management
+├── services/           # External services
+│   └── aiService.ts    # AI question generation and evaluation
+├── utils/              # Utility functions
+│   └── resumeParser.ts # Resume parsing logic
+└── App.tsx            # Main app component
+```
 
-## Learn More
+## 🔧 Configuration
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+The app uses mock AI services for demonstration purposes. To integrate with real AI APIs:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+1. Update `src/services/aiService.ts`
+2. Replace mock functions with actual API calls
+3. Add API keys and configuration as needed
+
+## 📱 Responsive Design
+
+The application is fully responsive and works on:
+- Desktop computers
+- Tablets
+- Mobile phones
+
+## 🔒 Data Privacy
+
+- All data is stored locally in the browser
+- No data is sent to external servers (except for AI services when configured)
+- Resume files are processed locally
+- Session data persists across browser sessions
+
+## 🚀 Deployment
+
+### Build for Production
+```bash
+npm run build
+```
+
+### Deploy to Vercel
+1. Install Vercel CLI: `npm i -g vercel`
+2. Run: `vercel`
+3. Follow the prompts
+
+### Deploy to Netlify
+1. Build the project: `npm run build`
+2. Upload the `build` folder to Netlify
+3. Configure redirects for SPA routing
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature-name`
+3. Commit changes: `git commit -am 'Add feature'`
+4. Push to branch: `git push origin feature-name`
+5. Submit a pull request
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+## 🎥 Demo
+
+A live demo is available at: [Demo URL]
+
+## 📞 Support
+
+For questions or support, please contact: [Your Contact Information]
+
+---
+
+**Note**: This is a demonstration project for internship assessment. The AI services are mocked for development purposes. In a production environment, integrate with real AI APIs like OpenAI, Anthropic, or similar services.
