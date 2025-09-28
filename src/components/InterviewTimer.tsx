@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Progress, Typography } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store';
@@ -12,7 +12,7 @@ const InterviewTimer: React.FC = () => {
   const dispatch = useDispatch();
   const { timer, currentSession } = useSelector((state: RootState) => state.interviews);
   const { currentCandidate } = useSelector((state: RootState) => state.candidates);
-  const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (timer.isActive && timer.timeRemaining > 0) {
@@ -53,20 +53,20 @@ const InterviewTimer: React.FC = () => {
         }
       }, 1000);
       
-      setIntervalId(id);
+      intervalRef.current = id;
     } else {
-      if (intervalId) {
-        clearInterval(intervalId);
-        setIntervalId(null);
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
       }
     }
 
     return () => {
-      if (intervalId) {
-        clearInterval(intervalId);
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
       }
     };
-  }, [timer.isActive, timer.timeRemaining, dispatch, currentCandidate, currentSession, intervalId]);
+  }, [timer.isActive, timer.timeRemaining, dispatch, currentCandidate, currentSession]);
 
 
   const formatTime = (seconds: number): string => {

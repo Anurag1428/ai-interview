@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Upload, Button, Form, Input, Card, Typography, Alert, Spin } from 'antd';
+import { Upload, Button, Form, Input, Card, Typography, Spin } from 'antd';
 import { UploadOutlined, FileTextOutlined } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
 import { addCandidate, setLoading, setError } from '../store/slices/candidateSlice';
@@ -16,7 +16,7 @@ interface ResumeUploadProps {
 const ResumeUpload: React.FC<ResumeUploadProps> = ({ onComplete }) => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
-  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [, setUploadedFile] = useState<File | null>(null);
   const [parsedInfo, setParsedInfo] = useState<ParsedResume | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [step, setStep] = useState<'upload' | 'review' | 'complete'>('upload');

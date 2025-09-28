@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store';
-import { setCurrentCandidate, updateCandidate } from '../store/slices/candidateSlice';
+import { updateCandidate } from '../store/slices/candidateSlice';
 import { startInterview, setGeneratingQuestions, setTimer } from '../store/slices/interviewSlice';
 import { addChatMessage, setTyping } from '../store/slices/uiSlice';
 import { generateInterviewQuestions } from '../services/aiService';
@@ -13,8 +13,6 @@ import './IntervieweeTab.css';
 const IntervieweeTab: React.FC = () => {
   const dispatch = useDispatch();
   const { currentCandidate } = useSelector((state: RootState) => state.candidates);
-  const { currentSession, isGeneratingQuestions } = useSelector((state: RootState) => state.interviews);
-  const { chatMessages } = useSelector((state: RootState) => state.ui);
   const [isStartingInterview, setIsStartingInterview] = useState(false);
 
   const handleResumeUploadComplete = async (candidateId: string) => {
