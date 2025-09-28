@@ -66,7 +66,7 @@ const InterviewTimer: React.FC = () => {
         clearInterval(intervalId);
       }
     };
-  }, [timer.isActive, timer.timeRemaining, dispatch, currentCandidate, currentSession]);
+  }, [timer.isActive, timer.timeRemaining, dispatch, currentCandidate, currentSession, intervalId]);
 
 
   const formatTime = (seconds: number): string => {
