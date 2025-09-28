@@ -59,7 +59,8 @@ const ResumeUpload: React.FC<ResumeUploadProps> = ({ onComplete }) => {
 
       dispatch(addCandidate(candidateData));
       setStep('complete');
-      onComplete(candidateData.name); // Use name as temporary ID
+      // Use the current candidate ID from the store
+      onComplete('current');
     } catch (error) {
       dispatch(setError('Failed to create candidate profile'));
     } finally {

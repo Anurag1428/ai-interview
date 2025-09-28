@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store';
-import { setCurrentCandidate } from '../store/slices/candidateSlice';
-import { startInterview, setGeneratingQuestions } from '../store/slices/interviewSlice';
+import { setCurrentCandidate, updateCandidate } from '../store/slices/candidateSlice';
+import { startInterview, setGeneratingQuestions, setTimer } from '../store/slices/interviewSlice';
 import { addChatMessage, setTyping } from '../store/slices/uiSlice';
 import { generateInterviewQuestions } from '../services/aiService';
 import ResumeUpload from './ResumeUpload';
@@ -26,8 +26,18 @@ const IntervieweeTab: React.FC = () => {
       dispatch(setGeneratingQuestions(true));
       const questions = await generateInterviewQuestions();
       
+      // Use current candidate ID if 'current' is passed
+      const actualCandidateId = candidateId === 'current' ? currentCandidate?.id : candidateId;
+      
+      if (!actualCandidateId) {
+        throw new Error('No candidate found');
+      }
+      
       // Start the interview
-      dispatch(startInterview({ candidateId, questions }));
+      dispatch(startInterview({ candidateId: actualCandidateId, questions }));
+      
+      // Update candidate status to in_progress
+      dispatch(updateCandidate({ id: actualCandidateId, updates: { interviewStatus: 'in_progress' } }));
       
       // Add welcome message
       dispatch(addChatMessage({
@@ -46,6 +56,9 @@ const IntervieweeTab: React.FC = () => {
             timeRemaining: questions[0].timeLimit,
           },
         }));
+        
+        // Start timer for first question
+        dispatch(setTimer({ timeRemaining: questions[0].timeLimit, questionId: questions[0].id }));
       }
     } catch (error) {
       console.error('Failed to start interview:', error);
@@ -77,7 +90,7 @@ const IntervieweeTab: React.FC = () => {
             <p>Your profile has been created. Click below to begin your interview.</p>
             <button 
               className="start-interview-btn"
-              onClick={() => handleResumeUploadComplete(currentCandidate.id)}
+              onClick={() => handleResumeUploadComplete('current')}
               disabled={isStartingInterview}
             >
               {isStartingInterview ? 'Starting Interview...' : 'Start Interview'}
