@@ -174,3 +174,24 @@
     font-size: 14px;
   }
 }
+.dashboard-tabs {
+  margin-top: 20px;
+}
+
+.dashboard-tabs .ant-tabs-tab {
+  font-weight: 500;
+  padding: 12px 20px;
+}
+
+.dashboard-tabs .ant-tabs-tab-active {
+  background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+  border-radius: 6px 6px 0 0;
+}
+
+.dashboard-tabs .ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: white !important;
+}
+
+.dashboard-tabs .ant-tabs-content-holder {
+  padding-top: 0;
+}

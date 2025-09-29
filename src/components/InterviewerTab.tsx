@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { Card, Table, Tag, Button, Input, Select, Typography, Space } from 'antd';
-import { SearchOutlined, EyeOutlined, UserOutlined } from '@ant-design/icons';
+import { Card, Table, Tag, Button, Input, Select, Typography, Space, Tabs } from 'antd';
+import { SearchOutlined, EyeOutlined, UserOutlined, BarChartOutlined, TeamOutlined } from '@ant-design/icons';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store';
 import { Candidate } from '../store/slices/candidateSlice';
 import { setCurrentCandidate } from '../store/slices/candidateSlice';
 import { setActiveTab } from '../store/slices/uiSlice';
 import CandidateDetailModal from './CandidateDetailModal';
+import AnalyticsDashboard from './AnalyticsDashboard';
 import './InterviewerTab.css';
 
 const { Title, Text } = Typography;
@@ -154,6 +155,66 @@ const InterviewerTab: React.FC = () => {
     },
   ];
 
+  const dashboardTabs = [
+    {
+      key: 'candidates',
+      label: (
+        <span>
+          <TeamOutlined />
+          Candidates
+        </span>
+      ),
+      children: (
+        <Card className="dashboard-card">
+          <div className="filters-section">
+            <Space size="middle" wrap>
+              <Search
+                placeholder="Search candidates..."
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+                style={{ width: 250 }}
+                prefix={<SearchOutlined />}
+              />
+              <Select
+                value={statusFilter}
+                onChange={setStatusFilter}
+                style={{ width: 150 }}
+              >
+                <Option value="all">All Status</Option>
+                <Option value="completed">Completed</Option>
+                <Option value="in_progress">In Progress</Option>
+                <Option value="not_started">Not Started</Option>
+              </Select>
+            </Space>
+          </div>
+
+          <Table
+            columns={columns}
+            dataSource={sortedCandidates}
+            rowKey="id"
+            pagination={{
+              pageSize: 10,
+              showSizeChanger: true,
+              showQuickJumper: true,
+              showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} candidates`,
+            }}
+            className="candidates-table"
+          />
+        </Card>
+      ),
+    },
+    {
+      key: 'analytics',
+      label: (
+        <span>
+          <BarChartOutlined />
+          Analytics
+        </span>
+      ),
+      children: <AnalyticsDashboard />,
+    },
+  ];
+
   return (
     <div className="interviewer-tab">
       <div className="dashboard-header">
@@ -175,42 +236,11 @@ const InterviewerTab: React.FC = () => {
         </div>
       </div>
 
-      <Card className="dashboard-card">
-        <div className="filters-section">
-          <Space size="middle" wrap>
-            <Search
-              placeholder="Search candidates..."
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-              style={{ width: 250 }}
-              prefix={<SearchOutlined />}
-            />
-            <Select
-              value={statusFilter}
-              onChange={setStatusFilter}
-              style={{ width: 150 }}
-            >
-              <Option value="all">All Status</Option>
-              <Option value="completed">Completed</Option>
-              <Option value="in_progress">In Progress</Option>
-              <Option value="not_started">Not Started</Option>
-            </Select>
-          </Space>
-        </div>
-
-        <Table
-          columns={columns}
-          dataSource={sortedCandidates}
-          rowKey="id"
-          pagination={{
-            pageSize: 10,
-            showSizeChanger: true,
-            showQuickJumper: true,
-            showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} candidates`,
-          }}
-          className="candidates-table"
-        />
-      </Card>
+      <Tabs
+        defaultActiveKey="candidates"
+        items={dashboardTabs}
+        className="dashboard-tabs"
+      />
 
       {selectedCandidate && (
         <CandidateDetailModal
