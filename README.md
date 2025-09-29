@@ -1,46 +1,167 @@
-# Getting Started with Create React App
+# AI-Powered Interview Assistant (Crisp)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A comprehensive React-based interview platform that provides AI-powered assessment for Full Stack Developer positions. Built for the Swipe Internship Assignment.
 
-## Available Scripts
+## 🚀 Features
 
-In the project directory, you can run:
+### Interviewee Experience
+- **Resume Upload**: Support for PDF and DOCX files with automatic data extraction
+- **Smart Data Collection**: AI chatbot collects missing information (Name, Email, Phone) before starting
+- **Timed Interview**: 6 questions with progressive difficulty (2 Easy → 2 Medium → 2 Hard)
+- **Real-time Feedback**: Instant AI evaluation with detailed scoring and suggestions
+- **Session Persistence**: Resume interrupted sessions with "Welcome Back" modal
 
-### `npm start`
+### Interviewer Dashboard
+- **Candidate Management**: View all candidates sorted by performance scores
+- **Detailed Analytics**: Complete chat history, scores, and AI summaries for each candidate
+- **Advanced Filtering**: Search and filter candidates by status and performance
+- **Progress Tracking**: Visual progress indicators and completion status
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Technical Highlights
+- **State Management**: Redux Toolkit with Redux Persist for data persistence
+- **Modern UI**: Ant Design components with custom styling
+- **TypeScript**: Full type safety throughout the application
+- **Responsive Design**: Works seamlessly across desktop and mobile devices
+- **Local Storage**: All data persisted locally - no external database required
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## 🛠️ Tech Stack
 
-### `npm test`
+- **Frontend**: React 19, TypeScript, Redux Toolkit
+- **UI Library**: Ant Design
+- **State Persistence**: Redux Persist
+- **File Processing**: PDF.js, Mammoth.js
+- **Routing**: React Router DOM
+- **Build Tool**: Create React App
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 📋 Question Categories
 
-### `npm run build`
+1. **React Fundamentals** (Easy)
+2. **JavaScript Core Concepts** (Easy)
+3. **React Advanced Patterns** (Medium)
+4. **Node.js & Backend** (Medium)
+5. **System Design** (Hard)
+6. **Algorithms & Data Structures** (Hard)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 🚀 Getting Started
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Prerequisites
+- Node.js (v16 or higher)
+- npm or yarn
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Installation
 
-### `npm run eject`
+1. Clone the repository
+```bash
+git clone <your-repo-url>
+cd ai-interview-assistant
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+2. Install dependencies
+```bash
+npm install
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+3. Start the development server
+```bash
+npm start
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+4. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### Building for Production
 
-## Learn More
+```bash
+npm run build
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 🎯 Usage Guide
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### For Candidates
+1. Upload your resume (PDF/DOCX format)
+2. Complete any missing profile information
+3. Start the timed interview (6 questions total)
+4. Receive instant AI feedback and final score
+
+### For Interviewers
+1. Switch to "Interviewer Dashboard" tab
+2. View all candidates and their performance metrics
+3. Click "View Details" to see complete interview history
+4. Use search and filters to manage candidates efficiently
+
+## 🏗️ Project Structure
+
+```
+src/
+├── components/          # React components
+│   ├── AppLayout.tsx   # Main layout with tabs
+│   ├── IntervieweeTab.tsx
+│   ├── InterviewerTab.tsx
+│   ├── ChatInterface.tsx
+│   ├── ResumeUpload.tsx
+│   └── ...
+├── store/              # Redux store configuration
+│   ├── slices/         # Redux slices
+│   └── index.ts
+├── services/           # AI service and utilities
+└── utils/              # Helper functions
+```
+
+## 🎨 Key Design Decisions
+
+### AI Evaluation System
+- **Content Analysis**: Evaluates technical keywords and concepts
+- **Time Management**: Considers response time in scoring
+- **Progressive Difficulty**: Adapts evaluation criteria based on question difficulty
+- **Comprehensive Feedback**: Provides strengths and improvement areas
+
+### State Management
+- **Redux Toolkit**: Simplified Redux with modern patterns
+- **Persistence**: Automatic local storage with redux-persist
+- **Type Safety**: Full TypeScript integration
+
+### User Experience
+- **Responsive Design**: Mobile-first approach with Ant Design
+- **Error Handling**: Graceful error states and user feedback
+- **Performance**: Optimized rendering and state updates
+
+## 🔧 Customization
+
+### Adding New Questions
+Edit `src/services/aiService.ts` to add new questions to the `FULL_STACK_QUESTIONS` array.
+
+### Modifying Evaluation Logic
+Update the `analyzeAnswerContent` function in `aiService.ts` to customize scoring algorithms.
+
+### UI Theming
+Modify the Ant Design theme in `src/App.tsx` ConfigProvider.
+
+## 📱 Mobile Responsiveness
+
+The application is fully responsive and works seamlessly on:
+- Desktop (1200px+)
+- Tablet (768px - 1199px)
+- Mobile (320px - 767px)
+
+## 🚀 Deployment
+
+The app can be deployed to any static hosting service:
+
+- **Vercel**: `vercel --prod`
+- **Netlify**: Drag and drop the `build` folder
+- **GitHub Pages**: Use `gh-pages` package
+
+## 🤝 Contributing
+
+This project was built as part of the Swipe Internship Assignment. The implementation focuses on:
+- Clean, maintainable code
+- Modern React patterns
+- Comprehensive TypeScript usage
+- Professional UI/UX design
+
+## 📄 License
+
+MIT License - feel free to use this project as a reference for your own implementations.
+
+---
+
+**Built with ❤️ for the Swipe Internship Assignment**
