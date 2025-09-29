@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, Table, Tag, Button, Input, Select, Typography, Space, Modal } from 'antd';
+import { Card, Table, Tag, Button, Input, Select, Typography, Space } from 'antd';
 import { SearchOutlined, EyeOutlined, UserOutlined } from '@ant-design/icons';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store';
@@ -22,7 +22,7 @@ const InterviewerTab: React.FC = () => {
   const [showDetailModal, setShowDetailModal] = useState(false);
 
   const handleStartNewInterview = () => {
-    dispatch(setCurrentCandidate(null));
+    dispatch(setCurrentCandidate(''));
     dispatch(setActiveTab('interviewee'));
   };
 

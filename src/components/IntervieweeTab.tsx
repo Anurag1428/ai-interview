@@ -16,7 +16,7 @@ const IntervieweeTab: React.FC = () => {
   const [isStartingInterview, setIsStartingInterview] = useState(false);
 
   const handleStartNewInterview = () => {
-    dispatch(setCurrentCandidate(null));
+    dispatch(setCurrentCandidate(''));
   };
 
   const handleResumeUploadComplete = async (candidateId: string) => {

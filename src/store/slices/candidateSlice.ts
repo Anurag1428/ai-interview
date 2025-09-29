@@ -69,8 +69,12 @@ const candidateSlice = createSlice({
       }
     },
     setCurrentCandidate: (state, action: PayloadAction<string>) => {
-      const candidate = state.candidates.find(c => c.id === action.payload);
-      state.currentCandidate = candidate || null;
+      if (action.payload === '') {
+        state.currentCandidate = null;
+      } else {
+        const candidate = state.candidates.find(c => c.id === action.payload);
+        state.currentCandidate = candidate || null;
+      }
     },
     addAnswer: (state, action: PayloadAction<{ candidateId: string; answer: Answer }>) => {
       const { candidateId, answer } = action.payload;
