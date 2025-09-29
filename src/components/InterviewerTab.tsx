@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Card, Table, Tag, Button, Input, Select, Typography, Space, Modal } from 'antd';
 import { SearchOutlined, EyeOutlined, UserOutlined } from '@ant-design/icons';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store';
 import { Candidate } from '../store/slices/candidateSlice';
+import { setCurrentCandidate } from '../store/slices/candidateSlice';
+import { setActiveTab } from '../store/slices/uiSlice';
 import CandidateDetailModal from './CandidateDetailModal';
 import './InterviewerTab.css';
 
@@ -12,11 +14,17 @@ const { Search } = Input;
 const { Option } = Select;
 
 const InterviewerTab: React.FC = () => {
+  const dispatch = useDispatch();
   const { candidates } = useSelector((state: RootState) => state.candidates);
   const [searchText, setSearchText] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [selectedCandidate, setSelectedCandidate] = useState<Candidate | null>(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
+
+  const handleStartNewInterview = () => {
+    dispatch(setCurrentCandidate(null));
+    dispatch(setActiveTab('interviewee'));
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -149,10 +157,22 @@ const InterviewerTab: React.FC = () => {
   return (
     <div className="interviewer-tab">
       <div className="dashboard-header">
-        <Title level={2}>Interview Dashboard</Title>
-        <Text type="secondary">
-          Manage and review candidate interviews
-        </Text>
+        <div className="header-content">
+          <div className="header-text">
+            <Title level={2}>Interview Dashboard</Title>
+            <Text type="secondary">
+              Manage and review candidate interviews
+            </Text>
+          </div>
+          <Button 
+            type="primary" 
+            size="large"
+            onClick={handleStartNewInterview}
+            className="start-new-interview-btn"
+          >
+            Start New Interview
+          </Button>
+        </div>
       </div>
 
       <Card className="dashboard-card">

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store';
-import { updateCandidate } from '../store/slices/candidateSlice';
+import { updateCandidate, setCurrentCandidate } from '../store/slices/candidateSlice';
 import { startInterview, setGeneratingQuestions, setTimer } from '../store/slices/interviewSlice';
 import { addChatMessage, setTyping } from '../store/slices/uiSlice';
 import { generateInterviewQuestions } from '../services/aiService';
@@ -14,6 +14,10 @@ const IntervieweeTab: React.FC = () => {
   const dispatch = useDispatch();
   const { currentCandidate } = useSelector((state: RootState) => state.candidates);
   const [isStartingInterview, setIsStartingInterview] = useState(false);
+
+  const handleStartNewInterview = () => {
+    dispatch(setCurrentCandidate(null));
+  };
 
   const handleResumeUploadComplete = async (candidateId: string) => {
     setIsStartingInterview(true);
@@ -86,13 +90,21 @@ const IntervieweeTab: React.FC = () => {
           <div className="ready-section">
             <h2>Ready to Start Your Interview?</h2>
             <p>Your profile has been created. Click below to begin your interview.</p>
-            <button 
-              className="start-interview-btn"
-              onClick={() => handleResumeUploadComplete('current')}
-              disabled={isStartingInterview}
-            >
-              {isStartingInterview ? 'Starting Interview...' : 'Start Interview'}
-            </button>
+            <div className="button-group">
+              <button 
+                className="start-interview-btn"
+                onClick={() => handleResumeUploadComplete('current')}
+                disabled={isStartingInterview}
+              >
+                {isStartingInterview ? 'Starting Interview...' : 'Start Interview'}
+              </button>
+              <button 
+                className="new-interview-btn"
+                onClick={handleStartNewInterview}
+              >
+                Start New Interview
+              </button>
+            </div>
           </div>
         </div>
       );
@@ -104,7 +116,16 @@ const IntervieweeTab: React.FC = () => {
           <div className="interview-container">
             <div className="interview-header">
               <h3>Interview in Progress</h3>
-              <InterviewTimer />
+              <div className="header-actions">
+                <InterviewTimer />
+                <button 
+                  className="new-interview-btn-small"
+                  onClick={handleStartNewInterview}
+                  title="Start New Interview"
+                >
+                  New Interview
+                </button>
+              </div>
             </div>
             <ChatInterface />
           </div>
