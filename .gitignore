@@ -112,3 +112,6 @@ Thumbs.db
 # AI API keys (security)
 .env.ai
 .env.keys
+
+# Development utilities
+clear-data.js

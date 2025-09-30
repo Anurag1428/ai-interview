@@ -5,6 +5,7 @@ import { ConfigProvider, theme } from 'antd';
 import { store, persistor, RootState } from './store';
 import AppLayout from './components/AppLayout';
 import ErrorBoundary from './components/ErrorBoundary';
+import DevPanel from './components/DevPanel';
 import './App.css';
 
 const ThemedApp: React.FC = () => {
@@ -41,6 +42,7 @@ const ThemedApp: React.FC = () => {
     <ConfigProvider theme={isDarkMode ? darkTheme : lightTheme}>
       <div className={`App ${isDarkMode ? 'dark-mode' : 'light-mode'}`}>
         <AppLayout />
+        <DevPanel />
       </div>
     </ConfigProvider>
   );
