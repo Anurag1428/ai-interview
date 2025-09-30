@@ -1,8 +1,11 @@
 import * as pdfjsLib from 'pdfjs-dist';
 import mammoth from 'mammoth';
 
-// Set up PDF.js worker - use local worker file
-pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.js';
+// Set up PDF.js worker - handle both development and production
+if (typeof window !== 'undefined') {
+  // Use CDN worker for better reliability in production
+  pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+}
 
 export interface ParsedResume {
   name: string;
@@ -16,11 +19,25 @@ export const parsePDF = async (file: File): Promise<string> => {
     const reader = new FileReader();
     reader.onload = async (e) => {
       try {
+        console.log('📄 Starting PDF parsing...');
         const arrayBuffer = e.target?.result as ArrayBuffer;
-        const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
+        
+        if (!arrayBuffer) {
+          throw new Error('Failed to read file as ArrayBuffer');
+        }
+
+        console.log('📄 Loading PDF document...');
+        const pdf = await pdfjsLib.getDocument({
+          data: arrayBuffer,
+          cMapUrl: `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/cmaps/`,
+          cMapPacked: true,
+        }).promise;
+        
+        console.log(`📄 PDF loaded, ${pdf.numPages} pages found`);
         let fullText = '';
 
         for (let i = 1; i <= pdf.numPages; i++) {
+          console.log(`📄 Processing page ${i}/${pdf.numPages}`);
           const page = await pdf.getPage(i);
           const textContent = await page.getTextContent();
           const pageText = textContent.items
@@ -29,12 +46,17 @@ export const parsePDF = async (file: File): Promise<string> => {
           fullText += pageText + '\n';
         }
 
+        console.log('✅ PDF parsing completed successfully');
         resolve(fullText);
       } catch (error) {
-        reject(error);
+        console.error('❌ PDF parsing failed:', error);
+        reject(new Error(`Failed to parse PDF: ${error instanceof Error ? error.message : 'Unknown error'}`));
       }
     };
-    reader.onerror = () => reject(new Error('Failed to read file'));
+    reader.onerror = () => {
+      console.error('❌ File reading failed');
+      reject(new Error('Failed to read file'));
+    };
     reader.readAsArrayBuffer(file);
   });
 };
@@ -44,14 +66,26 @@ export const parseDOCX = async (file: File): Promise<string> => {
     const reader = new FileReader();
     reader.onload = async (e) => {
       try {
+        console.log('📄 Starting DOCX parsing...');
         const arrayBuffer = e.target?.result as ArrayBuffer;
+        
+        if (!arrayBuffer) {
+          throw new Error('Failed to read file as ArrayBuffer');
+        }
+
+        console.log('📄 Extracting text from DOCX...');
         const result = await mammoth.extractRawText({ arrayBuffer });
+        console.log('✅ DOCX parsing completed successfully');
         resolve(result.value);
       } catch (error) {
-        reject(error);
+        console.error('❌ DOCX parsing failed:', error);
+        reject(new Error(`Failed to parse DOCX: ${error instanceof Error ? error.message : 'Unknown error'}`));
       }
     };
-    reader.onerror = () => reject(new Error('Failed to read file'));
+    reader.onerror = () => {
+      console.error('❌ File reading failed');
+      reject(new Error('Failed to read file'));
+    };
     reader.readAsArrayBuffer(file);
   });
 };
@@ -113,22 +147,33 @@ export const extractResumeInfo = (text: string): Partial<ParsedResume> => {
 };
 
 export const parseResume = async (file: File): Promise<ParsedResume> => {
+  console.log('🚀 Starting resume parsing for:', file.name, 'Type:', file.type);
+  
   let text: string;
   
-  if (file.type === 'application/pdf') {
-    text = await parsePDF(file);
-  } else if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-    text = await parseDOCX(file);
-  } else {
-    throw new Error('Unsupported file type. Please upload a PDF or DOCX file.');
-  }
+  try {
+    if (file.type === 'application/pdf') {
+      text = await parsePDF(file);
+    } else if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+      text = await parseDOCX(file);
+    } else {
+      throw new Error(`Unsupported file type: ${file.type}. Please upload a PDF or DOCX file.`);
+    }
 
-  const extractedInfo = extractResumeInfo(text);
-  
-  return {
-    name: extractedInfo.name || '',
-    email: extractedInfo.email || '',
-    phone: extractedInfo.phone || '',
-    text: extractedInfo.text || '',
-  };
+    console.log('📝 Extracted text length:', text.length);
+    console.log('📝 Text preview:', text.substring(0, 200) + '...');
+
+    const extractedInfo = extractResumeInfo(text);
+    console.log('✅ Resume parsing completed:', extractedInfo);
+    
+    return {
+      name: extractedInfo.name || '',
+      email: extractedInfo.email || '',
+      phone: extractedInfo.phone || '',
+      text: extractedInfo.text || '',
+    };
+  } catch (error) {
+    console.error('❌ Resume parsing failed:', error);
+    throw error;
+  }
 };
