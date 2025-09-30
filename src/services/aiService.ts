@@ -270,27 +270,8 @@ export const generateInterviewQuestions = async (
   candidateName?: string,
   candidateBackground?: string
 ): Promise<AIQuestion[]> => {
-  // Try to use Gemini AI first, fallback to curated questions
-  try {
-    const { generateQuestionsWithGemini, isGeminiConfigured } = await import('./geminiService');
-    
-    if (isGeminiConfigured()) {
-      console.log('🤖 Generating questions with Gemini AI...');
-      
-      // Generate questions using Gemini AI
-      const easyQuestions = await generateQuestionsWithGemini('easy', candidateName, candidateBackground);
-      const mediumQuestions = await generateQuestionsWithGemini('medium', candidateName, candidateBackground);
-      const hardQuestions = await generateQuestionsWithGemini('hard', candidateName, candidateBackground);
-      
-      return [...easyQuestions, ...mediumQuestions, ...hardQuestions];
-    }
-  } catch (error) {
-    console.warn('Gemini AI service unavailable, using curated questions:', error);
-  }
-  
-  // Fallback to curated questions with intelligent selection
-  console.log('📚 Using curated question bank...');
-  await new Promise(resolve => setTimeout(resolve, 2000));
+  // Use curated questions directly for fast, reliable performance
+  console.log('📚 Using curated question bank for optimal performance...');
   
   const easyQuestions = THEORETICAL_QUESTIONS.filter(q => q.difficulty === 'easy');
   const mediumQuestions = THEORETICAL_QUESTIONS.filter(q => q.difficulty === 'medium');
@@ -357,9 +338,8 @@ export const evaluateAnswer = async (
     console.warn('Gemini AI evaluation unavailable, using rule-based evaluation:', error);
   }
   
-  // Fallback to rule-based evaluation
+  // Use rule-based evaluation for fast, reliable performance
   console.log('📊 Using rule-based evaluation...');
-  await new Promise(resolve => setTimeout(resolve, 1500));
   
   const evaluation = analyzeAnswerContent(question, answer, timeSpent);
   return evaluation;
@@ -589,9 +569,8 @@ export const generateFinalSummary = async (
     console.warn('Gemini AI summary unavailable, using template-based summary:', error);
   }
   
-  // Fallback to template-based summary
+  // Use template-based summary for fast, reliable performance
   console.log('📋 Using template-based summary...');
-  await new Promise(resolve => setTimeout(resolve, 2000));
   
   const totalScore = answers.reduce((sum, item) => sum + item.evaluation.score, 0);
   const averageScore = Math.round(totalScore / answers.length);
