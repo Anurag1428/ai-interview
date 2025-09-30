@@ -1,6 +1,11 @@
 .app-layout {
   min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  transition: all 0.3s ease;
+}
+
+.dark-mode .app-layout {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
 }
 
 .app-header {
@@ -9,6 +14,13 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   padding: 0 24px;
+  transition: all 0.3s ease;
+}
+
+.dark-mode .app-header {
+  background: rgba(31, 31, 31, 0.95);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .header-content {
@@ -19,16 +31,38 @@
   justify-content: space-between;
 }
 
+.title-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
 .app-title {
   margin: 0 !important;
   color: #1890ff;
   font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.dark-mode .app-title {
+  color: #40a9ff;
 }
 
 .header-subtitle {
   color: #666;
   font-size: 14px;
   font-weight: 400;
+  transition: color 0.3s ease;
+}
+
+.dark-mode .header-subtitle {
+  color: #999;
 }
 
 .app-content {
@@ -42,6 +76,12 @@
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.dark-mode .main-tabs {
+  background: #1f1f1f;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .main-tabs .ant-tabs-nav {
@@ -49,6 +89,12 @@
   padding: 0 24px;
   background: #fafafa;
   border-bottom: 1px solid #f0f0f0;
+  transition: all 0.3s ease;
+}
+
+.dark-mode .main-tabs .ant-tabs-nav {
+  background: #262626;
+  border-bottom: 1px solid #434343;
 }
 
 .main-tabs .ant-tabs-content-holder {
@@ -60,6 +106,7 @@
   padding: 16px 24px;
   font-size: 16px;
   font-weight: 500;
+  transition: all 0.3s ease;
 }
 
 .main-tabs .ant-tabs-tab-active {
@@ -67,11 +114,20 @@
   border-radius: 8px 8px 0 0;
 }
 
+.dark-mode .main-tabs .ant-tabs-tab-active {
+  background: #1f1f1f;
+}
+
 @media (max-width: 768px) {
   .header-content {
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
+  }
+  
+  .header-controls {
+    width: 100%;
+    justify-content: space-between;
   }
   
   .app-content {

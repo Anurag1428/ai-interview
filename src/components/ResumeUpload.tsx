@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Upload, Button, Form, Input, Card, Typography, Spin } from 'antd';
+import { Upload, Form, Card, Typography, Spin } from 'antd';
 import { UploadOutlined, FileTextOutlined } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
 import { addCandidate, setLoading, setError } from '../store/slices/candidateSlice';

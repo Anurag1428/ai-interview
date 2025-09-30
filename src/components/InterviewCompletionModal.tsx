@@ -1,8 +1,7 @@
 import React from 'react';
 import { Modal, Result, Button, Typography, Card, Row, Col, Progress } from 'antd';
 import { TrophyOutlined, CheckCircleOutlined, MailOutlined } from '@ant-design/icons';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../store';
+import { useDispatch } from 'react-redux';
 import { setCurrentCandidate } from '../store/slices/candidateSlice';
 import { setActiveTab } from '../store/slices/uiSlice';
 

@@ -8,6 +8,7 @@ interface UIState {
   isTyping: boolean;
   currentDraftAnswer: string;
   draftAnswerQuestionId: string | null;
+  isDarkMode: boolean;
 }
 
 export interface ChatMessage {
@@ -22,6 +23,19 @@ export interface ChatMessage {
   };
 }
 
+// Detect user's system preference for dark mode
+const getInitialDarkMode = (): boolean => {
+  if (typeof window !== 'undefined') {
+    const savedTheme = localStorage.getItem('darkMode');
+    if (savedTheme !== null) {
+      return JSON.parse(savedTheme);
+    }
+    // Check system preference
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+  return false;
+};
+
 const initialState: UIState = {
   activeTab: 'interviewee',
   showWelcomeBackModal: false,
@@ -30,6 +44,7 @@ const initialState: UIState = {
   isTyping: false,
   currentDraftAnswer: '',
   draftAnswerQuestionId: null,
+  isDarkMode: getInitialDarkMode(),
 };
 
 const uiSlice = createSlice({
@@ -73,6 +88,20 @@ const uiSlice = createSlice({
       state.currentDraftAnswer = '';
       state.draftAnswerQuestionId = null;
     },
+    toggleDarkMode: (state) => {
+      state.isDarkMode = !state.isDarkMode;
+      // Save to localStorage
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('darkMode', JSON.stringify(state.isDarkMode));
+      }
+    },
+    setDarkMode: (state, action: PayloadAction<boolean>) => {
+      state.isDarkMode = action.payload;
+      // Save to localStorage
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('darkMode', JSON.stringify(action.payload));
+      }
+    },
   },
 });
 
@@ -86,6 +115,8 @@ export const {
   updateLastMessage,
   setDraftAnswer,
   clearDraftAnswer,
+  toggleDarkMode,
+  setDarkMode,
 } = uiSlice.actions;
 
 export default uiSlice.reducer;

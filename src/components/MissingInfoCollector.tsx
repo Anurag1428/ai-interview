@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Card, Input, Button, Typography, Avatar } from 'antd';
 import { RobotOutlined, UserOutlined, SendOutlined } from '@ant-design/icons';
 import { ParsedResume } from '../utils/resumeParser';
@@ -48,21 +48,15 @@ const MissingInfoCollector: React.FC<MissingInfoCollectorProps> = ({
     setMessages(prev => [...prev, message]);
   };
 
-  const addAIMessageWithDelay = (content: string, delay: number = 1000) => {
+  const addAIMessageWithDelay = useCallback((content: string, delay: number = 1000) => {
     setIsTyping(true);
     setTimeout(() => {
       addMessage('ai', content);
       setIsTyping(false);
     }, delay);
-  };
+  }, []);
 
-  const getMissingFields = () => {
-    const missing: string[] = [];
-    if (!collectedInfo.name?.trim()) missing.push('name');
-    if (!collectedInfo.email?.trim()) missing.push('email');
-    if (!collectedInfo.phone?.trim()) missing.push('phone');
-    return missing;
-  };
+
 
   const getFieldPrompt = (field: string) => {
     switch (field) {
@@ -310,7 +304,7 @@ const MissingInfoCollector: React.FC<MissingInfoCollectorProps> = ({
             <Input
               value={currentInput}
               onChange={(e) => setCurrentInput(e.target.value)}
-              onKeyPress={handleKeyPress}
+              onKeyDown={handleKeyPress}
               placeholder={
                 currentField === 'complete' 
                   ? "Type 'yes' when ready to start..."

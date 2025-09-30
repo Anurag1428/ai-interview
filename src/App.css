@@ -1,6 +1,11 @@
 .App {
   min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  transition: all 0.3s ease;
+}
+
+.App.dark-mode {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
 }
 
 * {
@@ -14,6 +19,30 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Dark mode scrollbar */
+.dark-mode ::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dark-mode ::-webkit-scrollbar-track {
+  background: #1f1f1f;
+}
+
+.dark-mode ::-webkit-scrollbar-thumb {
+  background: #434343;
+  border-radius: 4px;
+}
+
+.dark-mode ::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Smooth transitions for all elements */
+.dark-mode * {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 code {

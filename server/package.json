@@ -1,0 +1,22 @@
+{
+  "name": "ai-interview-assistant-server",
+  "version": "1.0.0",
+  "description": "Backend API for AI Interview Assistant (Express + MongoDB)",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js",
+    "test": "echo \"No tests yet\" && exit 0"
+  },
+  "keywords": ["ai", "interview", "assistant", "backend", "api"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}

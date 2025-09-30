@@ -25,7 +25,7 @@ const THEORETICAL_QUESTIONS: AIQuestion[] = [
     text: 'Explain what React is and why companies like Facebook, Netflix, and Airbnb choose it over other frameworks. What makes it special?',
     difficulty: 'easy',
     category: 'React Fundamentals',
-    timeLimit: 30,
+    timeLimit: 20,
     expectedKeywords: ['virtual dom', 'component', 'reusable', 'performance', 'ecosystem'],
   },
   {
@@ -33,7 +33,7 @@ const THEORETICAL_QUESTIONS: AIQuestion[] = [
     text: 'What is the difference between frontend and backend development? How do they communicate with each other?',
     difficulty: 'easy',
     category: 'Web Development Basics',
-    timeLimit: 30,
+    timeLimit: 20,
     expectedKeywords: ['frontend', 'backend', 'api', 'client', 'server', 'http'],
   },
   {
@@ -41,7 +41,7 @@ const THEORETICAL_QUESTIONS: AIQuestion[] = [
     text: 'Explain what APIs are and why they are important in modern web development. Give a real-world example.',
     difficulty: 'easy',
     category: 'API Concepts',
-    timeLimit: 30,
+    timeLimit: 20,
     expectedKeywords: ['api', 'interface', 'data', 'communication', 'rest'],
   },
   {
@@ -49,7 +49,7 @@ const THEORETICAL_QUESTIONS: AIQuestion[] = [
     text: 'What is the purpose of version control systems like Git? Why do development teams use them?',
     difficulty: 'easy',
     category: 'Development Tools',
-    timeLimit: 30,
+    timeLimit: 20,
     expectedKeywords: ['version control', 'git', 'collaboration', 'history', 'branches'],
   },
   {
@@ -57,7 +57,7 @@ const THEORETICAL_QUESTIONS: AIQuestion[] = [
     text: 'Explain the concept of responsive web design. Why is it important in today\'s world?',
     difficulty: 'easy',
     category: 'Frontend Concepts',
-    timeLimit: 30,
+    timeLimit: 20,
     expectedKeywords: ['responsive', 'mobile', 'desktop', 'css', 'media queries'],
   },
   {
@@ -65,7 +65,7 @@ const THEORETICAL_QUESTIONS: AIQuestion[] = [
     text: 'What is the difference between a library and a framework? Give examples of each.',
     difficulty: 'easy',
     category: 'Software Architecture',
-    timeLimit: 30,
+    timeLimit: 20,
     expectedKeywords: ['library', 'framework', 'control', 'structure', 'react', 'angular'],
   },
   {
@@ -73,7 +73,7 @@ const THEORETICAL_QUESTIONS: AIQuestion[] = [
     text: 'Explain what databases are and why web applications need them. What\'s the difference between SQL and NoSQL?',
     difficulty: 'easy',
     category: 'Database Concepts',
-    timeLimit: 30,
+    timeLimit: 20,
     expectedKeywords: ['database', 'sql', 'nosql', 'data storage', 'persistence'],
   },
   {
@@ -81,7 +81,7 @@ const THEORETICAL_QUESTIONS: AIQuestion[] = [
     text: 'What is cloud computing and how has it changed web development? Name some popular cloud providers.',
     difficulty: 'easy',
     category: 'Cloud & Infrastructure',
-    timeLimit: 30,
+    timeLimit: 20,
     expectedKeywords: ['cloud', 'aws', 'azure', 'scalability', 'deployment'],
   },
   {
@@ -89,7 +89,7 @@ const THEORETICAL_QUESTIONS: AIQuestion[] = [
     text: 'Explain what HTTPS is and why it\'s important for websites. How does it make browsing safer?',
     difficulty: 'easy',
     category: 'Web Security',
-    timeLimit: 30,
+    timeLimit: 20,
     expectedKeywords: ['https', 'ssl', 'encryption', 'security', 'certificate'],
   },
   {
@@ -97,7 +97,7 @@ const THEORETICAL_QUESTIONS: AIQuestion[] = [
     text: 'What is the role of a web browser in displaying websites? How does it process HTML, CSS, and JavaScript?',
     difficulty: 'easy',
     category: 'Web Fundamentals',
-    timeLimit: 30,
+    timeLimit: 20,
     expectedKeywords: ['browser', 'html', 'css', 'javascript', 'rendering'],
   },
 

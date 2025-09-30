@@ -24,9 +24,17 @@ const IntervieweeTab: React.FC = () => {
     dispatch(setTyping(true));
     
     try {
-      // Generate interview questions
+      // Generate interview questions with candidate context
       dispatch(setGeneratingQuestions(true));
-      const questions = await generateInterviewQuestions();
+      const candidateInfo = currentCandidate ? {
+        name: currentCandidate.name,
+        background: `Email: ${currentCandidate.email}, Phone: ${currentCandidate.phone}`
+      } : undefined;
+      
+      const questions = await generateInterviewQuestions(
+        candidateInfo?.name,
+        candidateInfo?.background
+      );
       
       // Use current candidate ID if 'current' is passed
       const actualCandidateId = candidateId === 'current' ? currentCandidate?.id : candidateId;

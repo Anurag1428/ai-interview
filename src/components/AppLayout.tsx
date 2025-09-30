@@ -6,6 +6,9 @@ import { setActiveTab, setWelcomeBackModal } from '../store/slices/uiSlice';
 import IntervieweeTab from './IntervieweeTab';
 import InterviewerTab from './InterviewerTab';
 import WelcomeBackModal from './WelcomeBackModal';
+import AIStatusIndicator from './AIStatusIndicator';
+import BackendStatusIndicator from './BackendStatusIndicator';
+import ThemeToggle from './ThemeToggle';
 import './AppLayout.css';
 
 const { Header, Content } = Layout;
@@ -45,11 +48,18 @@ const AppLayout: React.FC = () => {
     <Layout className="app-layout">
       <Header className="app-header">
         <div className="header-content">
-          <Title level={3} className="app-title">
-            AI Interview Assistant
-          </Title>
-          <div className="header-subtitle">
-            Powered by AI • Full Stack Developer Assessment
+          <div className="title-section">
+            <Title level={3} className="app-title">
+              AI Interview Assistant
+            </Title>
+            <AIStatusIndicator />
+            <BackendStatusIndicator />
+          </div>
+          <div className="header-controls">
+            <div className="header-subtitle">
+              Powered by AI • Full Stack Developer Assessment
+            </div>
+            <ThemeToggle />
           </div>
         </div>
       </Header>
