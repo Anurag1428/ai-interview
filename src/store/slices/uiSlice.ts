@@ -6,6 +6,8 @@ interface UIState {
   showResumeUploadModal: boolean;
   chatMessages: ChatMessage[];
   isTyping: boolean;
+  currentDraftAnswer: string;
+  draftAnswerQuestionId: string | null;
 }
 
 export interface ChatMessage {
@@ -26,6 +28,8 @@ const initialState: UIState = {
   showResumeUploadModal: false,
   chatMessages: [],
   isTyping: false,
+  currentDraftAnswer: '',
+  draftAnswerQuestionId: null,
 };
 
 const uiSlice = createSlice({
@@ -61,6 +65,14 @@ const uiSlice = createSlice({
         Object.assign(lastMessage, action.payload);
       }
     },
+    setDraftAnswer: (state, action: PayloadAction<{ answer: string; questionId: string }>) => {
+      state.currentDraftAnswer = action.payload.answer;
+      state.draftAnswerQuestionId = action.payload.questionId;
+    },
+    clearDraftAnswer: (state) => {
+      state.currentDraftAnswer = '';
+      state.draftAnswerQuestionId = null;
+    },
   },
 });
 
@@ -72,6 +84,8 @@ export const {
   clearChatMessages,
   setTyping,
   updateLastMessage,
+  setDraftAnswer,
+  clearDraftAnswer,
 } = uiSlice.actions;
 
 export default uiSlice.reducer;

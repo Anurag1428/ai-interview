@@ -4,6 +4,7 @@ import { UploadOutlined, FileTextOutlined } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
 import { addCandidate, setLoading, setError } from '../store/slices/candidateSlice';
 import { parseResume, ParsedResume } from '../utils/resumeParser';
+import MissingInfoCollector from './MissingInfoCollector';
 import './ResumeUpload.css';
 
 const { Title, Text } = Typography;
@@ -19,7 +20,7 @@ const ResumeUpload: React.FC<ResumeUploadProps> = ({ onComplete }) => {
   const [, setUploadedFile] = useState<File | null>(null);
   const [parsedInfo, setParsedInfo] = useState<ParsedResume | null>(null);
   const [isUploading, setIsUploading] = useState(false);
-  const [step, setStep] = useState<'upload' | 'review' | 'complete'>('upload');
+  const [step, setStep] = useState<'upload' | 'collect' | 'complete'>('upload');
 
   const handleFileUpload = async (file: File) => {
     setIsUploading(true);
@@ -35,7 +36,7 @@ const ResumeUpload: React.FC<ResumeUploadProps> = ({ onComplete }) => {
         phone: parsed.phone,
       });
       
-      setStep('review');
+      setStep('collect');
     } catch (error) {
       dispatch(setError(error instanceof Error ? error.message : 'Failed to parse resume'));
     } finally {
@@ -44,14 +45,14 @@ const ResumeUpload: React.FC<ResumeUploadProps> = ({ onComplete }) => {
     return false; // Prevent default upload
   };
 
-  const handleFormSubmit = async (values: any) => {
+  const handleInfoComplete = async (completeInfo: ParsedResume) => {
     dispatch(setLoading(true));
     try {
       const candidateData = {
-        name: values.name,
-        email: values.email,
-        phone: values.phone,
-        resumeText: parsedInfo?.text || '',
+        name: completeInfo.name,
+        email: completeInfo.email,
+        phone: completeInfo.phone,
+        resumeText: completeInfo.text || '',
         interviewStatus: 'not_started' as const,
         currentQuestionIndex: 0,
         answers: [],
@@ -60,7 +61,9 @@ const ResumeUpload: React.FC<ResumeUploadProps> = ({ onComplete }) => {
       dispatch(addCandidate(candidateData));
       setStep('complete');
       // Use the current candidate ID from the store
-      onComplete('current');
+      setTimeout(() => {
+        onComplete('current');
+      }, 1000);
     } catch (error) {
       dispatch(setError('Failed to create candidate profile'));
     } finally {
@@ -104,69 +107,27 @@ const ResumeUpload: React.FC<ResumeUploadProps> = ({ onComplete }) => {
     </Card>
   );
 
-  const renderReviewStep = () => (
-    <Card className="review-card">
-      <Title level={3}>Review Your Information</Title>
-      <Text type="secondary" className="review-description">
-        We've extracted the following information from your resume. Please review and complete any missing fields.
-      </Text>
-
-      <Form
-        form={form}
-        layout="vertical"
-        onFinish={handleFormSubmit}
-        className="candidate-form"
-      >
-        <Form.Item
-          name="name"
-          label="Full Name"
-          rules={[{ required: true, message: 'Please enter your full name' }]}
-        >
-          <Input size="large" placeholder="Enter your full name" />
-        </Form.Item>
-
-        <Form.Item
-          name="email"
-          label="Email Address"
-          rules={[
-            { required: true, message: 'Please enter your email address' },
-            { type: 'email', message: 'Please enter a valid email address' }
-          ]}
-        >
-          <Input size="large" placeholder="Enter your email address" />
-        </Form.Item>
-
-        <Form.Item
-          name="phone"
-          label="Phone Number"
-          rules={[{ required: true, message: 'Please enter your phone number' }]}
-        >
-          <Input size="large" placeholder="Enter your phone number" />
-        </Form.Item>
-
-        <div className="form-actions">
-          <Button size="large" onClick={() => setStep('upload')}>
-            Back to Upload
-          </Button>
-          <Button type="primary" size="large" htmlType="submit">
-            Start Interview
-          </Button>
-        </div>
-      </Form>
-    </Card>
+  const renderCollectStep = () => (
+    <MissingInfoCollector
+      parsedInfo={parsedInfo!}
+      onComplete={handleInfoComplete}
+    />
   );
 
   const renderCompleteStep = () => (
     <Card className="complete-card">
       <div className="complete-content">
-        <div className="success-icon">✓</div>
-        <Title level={3}>Profile Created Successfully!</Title>
+        <div className="success-icon">🚀</div>
+        <Title level={3}>Ready to Start Your Interview!</Title>
         <Text type="secondary">
-          Your profile has been created and you're ready to start the interview.
+          Your profile has been created successfully. The AI interviewer is preparing your personalized questions...
         </Text>
-        <Button type="primary" size="large" className="start-interview-btn">
-          Begin Interview
-        </Button>
+        <div className="loading-animation">
+          <Spin size="large" />
+          <Text type="secondary" style={{ marginTop: 16, display: 'block' }}>
+            Initializing AI Interview Assistant...
+          </Text>
+        </div>
       </div>
     </Card>
   );
@@ -174,7 +135,7 @@ const ResumeUpload: React.FC<ResumeUploadProps> = ({ onComplete }) => {
   return (
     <div className="resume-upload">
       {step === 'upload' && renderUploadStep()}
-      {step === 'review' && renderReviewStep()}
+      {step === 'collect' && renderCollectStep()}
       {step === 'complete' && renderCompleteStep()}
     </div>
   );

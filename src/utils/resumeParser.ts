@@ -71,17 +71,40 @@ export const extractResumeInfo = (text: string): Partial<ParsedResume> => {
     info.email = emailMatch[1].trim();
   }
 
-  // Extract phone (various formats)
+  // Extract phone (Indian and international formats)
   const phonePatterns = [
+    // Indian formats: +91 9876543210, +91-9876543210, +91 98765 43210
+    /(\+91[-.\s]?)?([6-9][0-9]{9})/,
+    // Indian with country code variations: 91-9876543210, 0091-9876543210
+    /(0091|91)[-.\s]?([6-9][0-9]{9})/,
+    // US format: +1-234-567-8900, (234) 567-8900
     /(\+?1?[-.\s]?)?\(?([0-9]{3})\)?[-.\s]?([0-9]{3})[-.\s]?([0-9]{4})/,
-    /(\+?[0-9]{1,3}[-.\s]?)?([0-9]{3,4})[-.\s]?([0-9]{3,4})[-.\s]?([0-9]{3,4})/,
-    /(\+?[0-9]{1,3}[-.\s]?)?([0-9]{10,})/,
+    // General international: +XX-XXXXXXXXXX
+    /(\+[0-9]{1,3}[-.\s]?)?([0-9]{8,15})/,
+    // Fallback for any 10+ digit number
+    /([0-9]{10,15})/,
   ];
 
   for (const pattern of phonePatterns) {
     const phoneMatch = text.match(pattern);
     if (phoneMatch) {
-      info.phone = phoneMatch[0].trim();
+      let phone = phoneMatch[0].trim();
+      
+      // Normalize Indian phone numbers
+      if (phone.match(/^[6-9][0-9]{9}$/)) {
+        // Add +91 if it's a 10-digit Indian number starting with 6-9
+        phone = '+91 ' + phone;
+      } else if (phone.match(/^(91|0091)[-.\s]?([6-9][0-9]{9})$/)) {
+        // Normalize 91-XXXXXXXXXX to +91 XXXXXXXXXX
+        const digits = phone.replace(/[^0-9]/g, '');
+        phone = '+91 ' + digits.slice(-10);
+      } else if (phone.match(/^\+91[-.\s]?([6-9][0-9]{9})$/)) {
+        // Already has +91, just clean up formatting
+        const digits = phone.replace(/[^0-9]/g, '');
+        phone = '+91 ' + digits.slice(-10);
+      }
+      
+      info.phone = phone;
       break;
     }
   }

@@ -3,7 +3,7 @@ import { Input, Button, Card, Typography, message } from 'antd';
 import { SendOutlined } from '@ant-design/icons';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store';
-import { addChatMessage, setTyping } from '../store/slices/uiSlice';
+import { addChatMessage, setTyping, setDraftAnswer, clearDraftAnswer } from '../store/slices/uiSlice';
 import { addAnswer, updateCandidate } from '../store/slices/candidateSlice';
 import { nextQuestion, setTimer, stopTimer } from '../store/slices/interviewSlice';
 import { evaluateAnswer } from '../services/aiService';
@@ -18,9 +18,8 @@ const ChatInterface: React.FC = () => {
   const dispatch = useDispatch();
   const { currentCandidate } = useSelector((state: RootState) => state.candidates);
   const { currentSession, timer } = useSelector((state: RootState) => state.interviews);
-  const { chatMessages, isTyping } = useSelector((state: RootState) => state.ui);
+  const { chatMessages, isTyping, currentDraftAnswer, draftAnswerQuestionId } = useSelector((state: RootState) => state.ui);
   
-  const [currentAnswer, setCurrentAnswer] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -39,7 +38,25 @@ const ChatInterface: React.FC = () => {
     return currentSession.questions[currentSession.currentQuestionIndex];
   };
 
+  // Get the current answer - either from draft or empty
+  const getCurrentAnswer = (): string => {
+    const currentQuestion = getCurrentQuestion();
+    if (currentQuestion && draftAnswerQuestionId === currentQuestion.id) {
+      return currentDraftAnswer;
+    }
+    return '';
+  };
+
+  // Handle answer change with persistence
+  const handleAnswerChange = (value: string) => {
+    const currentQuestion = getCurrentQuestion();
+    if (currentQuestion) {
+      dispatch(setDraftAnswer({ answer: value, questionId: currentQuestion.id }));
+    }
+  };
+
   const handleSubmitAnswer = async () => {
+    const currentAnswer = getCurrentAnswer();
     if (!currentAnswer.trim() || !currentCandidate || !currentSession) return;
 
     const currentQuestion = getCurrentQuestion();
@@ -103,8 +120,13 @@ const ChatInterface: React.FC = () => {
       } else {
         // Interview completed
         dispatch(addChatMessage({
+          type: 'system',
+          content: '🎉 Congratulations! You have successfully completed all 6 questions!',
+        }));
+
+        dispatch(addChatMessage({
           type: 'ai',
-          content: 'Congratulations! You have completed all 6 questions. I will now generate your final evaluation and summary.',
+          content: 'Thank you for participating in this AI-powered interview. I am now analyzing your responses and generating your comprehensive evaluation report. This may take a moment...',
         }));
 
         // Update candidate status
@@ -113,19 +135,50 @@ const ChatInterface: React.FC = () => {
           updates: { interviewStatus: 'completed' }
         }));
 
-        // Generate final summary (mock for now)
+        // Generate detailed final summary
         setTimeout(() => {
+          const finalScore = Math.round(
+            currentCandidate.answers.reduce((sum, ans) => sum + (ans.score || 0), 0) / 
+            Math.max(currentCandidate.answers.length, 1)
+          );
+          
+          let performanceLevel = '';
+          let recommendation = '';
+          
+          if (finalScore >= 85) {
+            performanceLevel = 'Excellent';
+            recommendation = 'Strong candidate - Highly recommended for next round';
+          } else if (finalScore >= 70) {
+            performanceLevel = 'Good';
+            recommendation = 'Solid candidate - Recommended for next round';
+          } else if (finalScore >= 60) {
+            performanceLevel = 'Average';
+            recommendation = 'Consider for next round with additional evaluation';
+          } else {
+            performanceLevel = 'Needs Improvement';
+            recommendation = 'Additional training recommended';
+          }
+
           dispatch(addChatMessage({
-            type: 'ai',
-            content: `Interview Complete! Your final score is ${Math.round(
-              currentCandidate.answers.reduce((sum, ans) => sum + (ans.score || 0), 0) / 
-              Math.max(currentCandidate.answers.length, 1)
-            )}/100. Thank you for participating!`,
+            type: 'system',
+            content: `📊 INTERVIEW RESULTS FOR ${currentCandidate.name.toUpperCase()}
+
+🎯 Final Score: ${finalScore}/100
+📈 Performance Level: ${performanceLevel}
+💼 Recommendation: ${recommendation}
+
+📋 Next Steps:
+• Your responses have been saved and will be reviewed by our hiring team
+• You will receive detailed feedback via email within 2-3 business days
+• If selected, you'll be contacted for the next round of interviews
+
+Thank you for your time and effort. Best of luck! 🚀`,
           }));
-        }, 2000);
+        }, 3000);
       }
 
-      setCurrentAnswer('');
+      // Clear the draft answer after successful submission
+      dispatch(clearDraftAnswer());
     } catch (error) {
       message.error('Failed to submit answer. Please try again.');
       console.error('Error submitting answer:', error);
@@ -181,8 +234,8 @@ const ChatInterface: React.FC = () => {
           <Card className="input-card">
             <div className="input-container">
               <TextArea
-                value={currentAnswer}
-                onChange={(e) => setCurrentAnswer(e.target.value)}
+                value={getCurrentAnswer()}
+                onChange={(e) => handleAnswerChange(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder={`Answer the ${currentQuestion.difficulty} question...`}
                 autoSize={{ minRows: 3, maxRows: 6 }}
@@ -194,18 +247,27 @@ const ChatInterface: React.FC = () => {
                 icon={<SendOutlined />}
                 onClick={handleSubmitAnswer}
                 loading={isSubmitting}
-                disabled={!currentAnswer.trim()}
+                disabled={!getCurrentAnswer().trim()}
                 className="submit-btn"
               >
                 Submit Answer
               </Button>
             </div>
             <div className="input-footer">
-              <Text type="secondary">
-                Question {(currentSession?.currentQuestionIndex ?? 0) + 1} of {currentSession?.questions.length ?? 0} • 
-                Difficulty: {currentQuestion.difficulty} • 
-                Time Limit: {currentQuestion.timeLimit}s
-              </Text>
+              <div className="footer-left">
+                <Text type="secondary">
+                  Question {(currentSession?.currentQuestionIndex ?? 0) + 1} of {currentSession?.questions.length ?? 0} • 
+                  Difficulty: {currentQuestion.difficulty} • 
+                  Time Limit: {currentQuestion.timeLimit}s
+                </Text>
+              </div>
+              {getCurrentAnswer().trim() && (
+                <div className="footer-right">
+                  <Text type="secondary" className="draft-indicator">
+                    ✓ Draft saved
+                  </Text>
+                </div>
+              )}
             </div>
           </Card>
         </div>

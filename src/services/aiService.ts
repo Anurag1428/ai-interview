@@ -266,11 +266,32 @@ const THEORETICAL_QUESTIONS: AIQuestion[] = [
   },
 ];
 
-export const generateInterviewQuestions = async (): Promise<AIQuestion[]> => {
-  // Simulate AI thinking time
+export const generateInterviewQuestions = async (
+  candidateName?: string,
+  candidateBackground?: string
+): Promise<AIQuestion[]> => {
+  // Try to use Gemini AI first, fallback to curated questions
+  try {
+    const { generateQuestionsWithGemini, isGeminiConfigured } = await import('./geminiService');
+    
+    if (isGeminiConfigured()) {
+      console.log('🤖 Generating questions with Gemini AI...');
+      
+      // Generate questions using Gemini AI
+      const easyQuestions = await generateQuestionsWithGemini('easy', candidateName, candidateBackground);
+      const mediumQuestions = await generateQuestionsWithGemini('medium', candidateName, candidateBackground);
+      const hardQuestions = await generateQuestionsWithGemini('hard', candidateName, candidateBackground);
+      
+      return [...easyQuestions, ...mediumQuestions, ...hardQuestions];
+    }
+  } catch (error) {
+    console.warn('Gemini AI service unavailable, using curated questions:', error);
+  }
+  
+  // Fallback to curated questions with intelligent selection
+  console.log('📚 Using curated question bank...');
   await new Promise(resolve => setTimeout(resolve, 2000));
   
-  // AI-powered question selection based on theoretical concepts
   const easyQuestions = THEORETICAL_QUESTIONS.filter(q => q.difficulty === 'easy');
   const mediumQuestions = THEORETICAL_QUESTIONS.filter(q => q.difficulty === 'medium');
   const hardQuestions = THEORETICAL_QUESTIONS.filter(q => q.difficulty === 'hard');
@@ -280,7 +301,6 @@ export const generateInterviewQuestions = async (): Promise<AIQuestion[]> => {
   const selectedMedium = selectDiverseQuestions(mediumQuestions, 2);
   const selectedHard = selectDiverseQuestions(hardQuestions, 2);
   
-  // Return in progressive difficulty order
   return [...selectedEasy, ...selectedMedium, ...selectedHard];
 };
 
@@ -325,12 +345,23 @@ export const evaluateAnswer = async (
   answer: string,
   timeSpent: number
 ): Promise<AIEvaluation> => {
-  // Simulate API delay
+  // Try to use Gemini AI first, fallback to rule-based evaluation
+  try {
+    const { evaluateAnswerWithGemini, isGeminiConfigured } = await import('./geminiService');
+    
+    if (isGeminiConfigured()) {
+      console.log('🤖 Evaluating answer with Gemini AI...');
+      return await evaluateAnswerWithGemini(question, answer, timeSpent);
+    }
+  } catch (error) {
+    console.warn('Gemini AI evaluation unavailable, using rule-based evaluation:', error);
+  }
+  
+  // Fallback to rule-based evaluation
+  console.log('📊 Using rule-based evaluation...');
   await new Promise(resolve => setTimeout(resolve, 1500));
   
-  // Enhanced evaluation logic based on answer content and quality
   const evaluation = analyzeAnswerContent(question, answer, timeSpent);
-  
   return evaluation;
 };
 
@@ -546,7 +577,20 @@ export const generateFinalSummary = async (
   candidateName: string,
   answers: Array<{ question: AIQuestion; answer: string; evaluation: AIEvaluation }>
 ): Promise<string> => {
-  // Simulate API delay
+  // Try to use Gemini AI first, fallback to template-based summary
+  try {
+    const { generateFinalSummaryWithGemini, isGeminiConfigured } = await import('./geminiService');
+    
+    if (isGeminiConfigured()) {
+      console.log('🤖 Generating summary with Gemini AI...');
+      return await generateFinalSummaryWithGemini(candidateName, answers);
+    }
+  } catch (error) {
+    console.warn('Gemini AI summary unavailable, using template-based summary:', error);
+  }
+  
+  // Fallback to template-based summary
+  console.log('📋 Using template-based summary...');
   await new Promise(resolve => setTimeout(resolve, 2000));
   
   const totalScore = answers.reduce((sum, item) => sum + item.evaluation.score, 0);
