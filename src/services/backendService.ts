@@ -3,6 +3,11 @@ const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000/api
 
 // Check if backend is available
 export const isBackendAvailable = async (): Promise<boolean> => {
+  // In production, always use local storage (Redux Persist)
+  if (process.env.NODE_ENV === 'production') {
+    return false;
+  }
+  
   try {
     const response = await fetch(`${API_BASE_URL}/health`, {
       method: 'GET',
